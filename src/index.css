@@ -1,0 +1,240 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #080810;
+  --bg-surface: #0f0f1a;
+  --bg-elevated: #16162a;
+  --bg-card: #1a1a2e;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --text-primary: #f0f0ff;
+  --text-secondary: #8888aa;
+  --text-muted: #55556a;
+  --accent-green: #00e87a;
+  --accent-green-dim: rgba(0, 232, 122, 0.12);
+  --accent-blue: #4f6ef7;
+  --accent-blue-dim: rgba(79, 110, 247, 0.12);
+  --accent-purple: #9b6dff;
+  --accent-red: #ff4d6a;
+  --accent-red-dim: rgba(255, 77, 106, 0.12);
+  --accent-yellow: #f5a623;
+  --radius: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Geist', 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent-blue-dim);
+  color: var(--text-primary);
+}
+
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 1.5px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+.app-layout {
+  display: grid;
+  grid-template-areas:
+    'topbar topbar topbar'
+    'leftrail canvas rightpanel';
+  grid-template-rows: 52px 1fr;
+  grid-template-columns: 52px 1fr 300px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-layout__topbar {
+  grid-area: topbar;
+}
+
+.app-layout__leftrail {
+  grid-area: leftrail;
+}
+
+.app-layout__canvas {
+  grid-area: canvas;
+}
+
+.app-layout__rightpanel {
+  grid-area: rightpanel;
+}
+
+.canvas-area {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-base);
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.12) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+.canvas-area::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(8, 8, 16, 0.6) 100%
+  );
+  z-index: 1;
+}
+
+.canvas-area .react-flow {
+  background: transparent !important;
+  z-index: 2;
+}
+
+.inspector-enter {
+  animation: inspectorSlideIn 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes inspectorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.service-node-card {
+  width: 260px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16162a 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  position: relative;
+  transition: all 150ms ease;
+}
+
+.service-node-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+}
+
+.service-node-card:hover {
+  border-color: var(--border-default);
+  box-shadow:
+    0 0 0 1px var(--border-default),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.service-node-card.selected {
+  border-color: var(--accent-blue);
+  box-shadow:
+    0 0 0 1px var(--accent-blue),
+    0 0 24px rgba(79, 110, 247, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.db-node-card {
+  background: linear-gradient(135deg, #1e1e35 0%, #141428 100%);
+}
+
+.service-node-card .react-flow__handle {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-blue);
+  border: 2px solid var(--bg-card);
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.service-node-card:hover .react-flow__handle {
+  opacity: 1;
+}
+
+.gradient-slider [data-orientation='horizontal'] {
+  height: 5px;
+}
+
+.gradient-slider [data-orientation='horizontal'] .relative {
+  height: 5px;
+}
+
+@media (max-width: 767px) {
+  .app-layout {
+    grid-template-areas:
+      'topbar'
+      'canvas';
+    grid-template-columns: 1fr;
+    grid-template-rows: 52px 1fr;
+  }
+
+  .app-layout__leftrail,
+  .app-layout__rightpanel {
+    display: none;
+  }
+}
