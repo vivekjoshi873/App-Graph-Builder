@@ -6,6 +6,7 @@ import { TopBar } from '@/components/layout/TopBar'
 import { LeftRail } from '@/components/layout/LeftRail'
 import { RightPanel } from '@/components/layout/RightPanel'
 import { MobileDrawer } from '@/components/layout/MobileDrawer'
+import { SettingsPanel } from '@/components/layout/SettingsPanel'
 import { AppCanvas, type AppCanvasHandle } from '@/components/canvas/AppCanvas'
 import { FlowProvider } from '@/context/FlowContext'
 import { useStore } from '@/store/useStore'
@@ -95,6 +96,7 @@ function Dashboard() {
       </main>
       {!isMobile && <RightPanel onAddNode={addNode} />}
       {isMobile && <MobileDrawer onAddNode={addNode} />}
+      <SettingsPanel />
     </div>
   )
 }

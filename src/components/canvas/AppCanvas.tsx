@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useImperativeHandle, forwardRef } from 'react'
+import { useCallback, useEffect, useImperativeHandle, forwardRef, useMemo } from 'react'
 import {
   ReactFlow,
   MarkerType,
@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { useAppGraph } from '@/hooks/useAppGraph'
 import { useStore } from '@/store/useStore'
 import { useFlow } from '@/context/FlowContext'
+import { applyRailFilter, isNodeVisibleInView } from '@/lib/railFilters'
 
 const nodeTypes = {
   serviceNode: ServiceNode,
@@ -50,17 +51,68 @@ export const AppCanvas = forwardRef<AppCanvasHandle, AppCanvasProps>(function Ap
 ) {
   const { data, isLoading, isError, refetch, isFetching } = useAppGraph(appId)
   const selectedNodeId = useStore((s) => s.selectedNodeId)
+  const activeRailView = useStore((s) => s.activeRailView)
   const setSelectedNode = useStore((s) => s.setSelectedNode)
   const { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange, addNode } =
     useFlow()
+
+  const { nodes: displayNodes, edges: displayEdges } = useMemo(
+    () => applyRailFilter(nodes, edges, activeRailView),
+    [nodes, edges, activeRailView],
+  )
 
   useEffect(() => {
     if (data) {
       setNodes(data.nodes)
       setEdges(data.edges)
       setSelectedNode(null)
+
+      const id = window.setTimeout(() => {
+        const instance = (
+          window as Window & {
+            __reactFlow?: ReactFlowInstance<Node<ServiceNodeData>, Edge>
+          }
+        ).__reactFlow
+        if (!instance) return
+
+        const view = useStore.getState().activeRailView
+        const { nodes: filteredNodes } = applyRailFilter(data.nodes, data.edges, view)
+        const visibleNodes = filteredNodes.filter((node) => !node.hidden)
+        instance.fitView({
+          nodes: visibleNodes.length > 0 ? visibleNodes : undefined,
+          padding: 0.2,
+          duration: 600,
+        })
+      }, 0)
+
+      return () => window.clearTimeout(id)
     }
   }, [data, setNodes, setEdges, setSelectedNode])
+
+  useEffect(() => {
+    const instance = (
+      window as Window & {
+        __reactFlow?: ReactFlowInstance<Node<ServiceNodeData>, Edge>
+      }
+    ).__reactFlow
+    if (!instance || nodes.length === 0) return
+
+    const { nodes: filteredNodes } = applyRailFilter(nodes, edges, activeRailView)
+    const visibleNodes = filteredNodes.filter((node) => !node.hidden)
+    instance.fitView({
+      nodes: visibleNodes.length > 0 ? visibleNodes : undefined,
+      padding: 0.2,
+      duration: 600,
+    })
+  }, [activeRailView])
+
+  useEffect(() => {
+    if (!selectedNodeId) return
+    const selectedNode = nodes.find((node) => node.id === selectedNodeId)
+    if (selectedNode && !isNodeVisibleInView(selectedNode, activeRailView)) {
+      setSelectedNode(null)
+    }
+  }, [activeRailView, nodes, selectedNodeId, setSelectedNode])
 
   const fitView = useCallback(() => {
     const instance = (
@@ -149,8 +201,8 @@ export const AppCanvas = forwardRef<AppCanvasHandle, AppCanvasProps>(function Ap
   return (
     <div className="canvas-area relative h-full w-full">
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
+        nodes={displayNodes}
+        edges={displayEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}

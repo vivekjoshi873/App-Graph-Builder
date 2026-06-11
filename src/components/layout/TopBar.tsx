@@ -51,7 +51,7 @@ export function TopBar({
   }, [dropdownOpen, setAppListOpen])
 
   return (
-    <header className="app-layout__topbar flex h-[52px] items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 backdrop-blur-[12px]">
+    <header className="app-layout__topbar flex h-[52px] items-center justify-between overflow-visible border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 backdrop-blur-[12px]">
       <div className="flex items-center gap-3">
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-blue)]">
           <Zap className="h-4 w-4 text-white" />
@@ -68,7 +68,7 @@ export function TopBar({
           </button>
 
           {dropdownOpen && (
-            <div className="absolute left-0 top-full z-50 mt-1 w-64 overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-elevated)] py-1 shadow-xl">
+            <div className="absolute left-0 top-full z-[100] mt-1 w-64 overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-elevated)] py-1 shadow-xl">
               {apps?.map((app) => (
                 <button
                   key={app.id}
