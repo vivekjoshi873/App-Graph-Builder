@@ -2,10 +2,10 @@ import { useRef, useState, useEffect } from 'react'
 import {
   ChevronDown,
   Maximize2,
+  Network,
   PanelRight,
   PlusCircle,
-  Share2,
-  Zap,
+  // Share2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useApps } from '@/hooks/useApps'
@@ -54,7 +54,7 @@ export function TopBar({
     <header className="app-layout__topbar flex h-[52px] items-center justify-between overflow-visible border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 backdrop-blur-[12px]">
       <div className="flex items-center gap-3">
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-blue)]">
-          <Zap className="h-4 w-4 text-white" />
+          <Network className="h-4 w-4 text-white" />
         </div>
 
         <div className="relative" ref={dropdownRef}>
@@ -108,9 +108,9 @@ export function TopBar({
           <Button variant="ghost" size="icon" onClick={onFitView} aria-label="Fit view">
             <Maximize2 className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" aria-label="Share">
+          {/* <Button variant="ghost" size="icon" aria-label="Share">
             <Share2 className="h-4 w-4" />
-          </Button>
+          </Button> */}
           <div className="mx-2 h-5 w-px bg-[var(--border-subtle)]" />
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-purple)] to-[var(--accent-blue)] text-[11px] font-semibold text-white">
             AG
