@@ -28,7 +28,6 @@ const RAIL_ICONS: Record<RailView, LucideIcon> = {
 export function LeftRail() {
   const activeRailView = useStore((s) => s.activeRailView)
   const setActiveRailView = useStore((s) => s.setActiveRailView)
-  const setSettingsOpen = useStore((s) => s.setSettingsOpen)
 
   return (
     <nav className="app-layout__leftrail flex h-full flex-col items-center gap-1 border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] py-3">
